@@ -1,0 +1,42 @@
+2020-05-02 23:28:04 INFO  BDConnection:71 - Неудалча, бро
+2020-05-02 23:28:22 ERROR BDConnection:71 - Неудалча, бро
+2020-05-02 23:31:39 ERROR BDConnection:71 - class java.sql.SQLException
+2020-05-02 23:32:56 ERROR BDConnection:71 - ОШИБКА: отношение "buyers" уже существует
+2020-05-03 17:16:01 ERROR BDConnection:34 - ОШИБКА: отношение "buyers" уже существует
+2020-05-03 17:33:15 ERROR BDConnection:58 - ОШИБКА: ошибка синтаксиса (примерное положение: "INSERT")
+  Позиция: 104
+2020-05-03 17:35:25 ERROR BDConnection:62 - ОШИБКА: отношение "buyers" уже существует
+2020-05-03 17:47:10 INFO  BDConnection:56 - Table "Buyers" is created!
+2020-05-03 17:55:44 INFO  BDConnection:117 - Table "Buyers" is created!
+
+
+2020-05-12 20:51:06 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 20:51:48 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 20:54:59 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 20:55:33 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 20:55:40 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:07:55 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:09:19 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:12:55 INFO  BDConnection:136 - Tables are created
+2020-05-12 21:14:04 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:15:16 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:22:27 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:23:24 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:24:11 ERROR BDConnection:140 - ОШИБКА: отношение "buyers" уже существует
+2020-05-12 21:26:09 INFO  BDConnection:136 - Tables are created
+2020-05-12 21:29:59 INFO  BDConnection:136 - Tables are created
+2020-05-12 21:38:37 ERROR BDConnection:141 - ОШИБКА: удалить объект таблица buyers нельзя, так как от него зависят другие объекты
+  Подробности: ограничение purchases_buyerid_fkey в отношении таблица purchases зависит от объекта таблица buyers
+  Подсказка: Для удаления зависимых объектов используйте DROP ... CASCADE.
+2020-05-12 21:39:07 ERROR BDConnection:141 - ОШИБКА: отношение "products" уже существует
+2020-05-12 21:40:29 INFO  BDConnection:139 - Tables are created
+2020-05-12 21:41:15 INFO  BDConnection:139 - Tables are created
+2020-05-12 21:41:39 INFO  BDConnection:139 - Tables are created
+2020-05-12 21:51:17 INFO  BDConnection:139 - Tables are created
+2020-05-12 21:55:14 INFO  BDConnection:142 - Tables are created
+2020-05-12 22:06:22 INFO  BDConnection:142 - Tables are created
+2020-05-12 22:07:17 INFO  BDConnection:142 - Tables are created
+2020-05-12 22:11:25 INFO  BDConnection:142 - Tables are created
+2020-05-12 22:15:26 INFO  BDConnection:142 - Tables are created
+2020-05-12 22:15:48 INFO  BDConnection:142 - Tables are created
+2020-05-12 22:34:13 INFO  BDConnection:142 - Tables are created
