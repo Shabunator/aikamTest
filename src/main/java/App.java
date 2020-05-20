@@ -17,7 +17,8 @@ public class App {
 
     public static void main(String[] args) throws SQLException {
         BDConnection.createDbUserTable();
-        Parser.execute((Map<String, Object>) Parser.fromJson());
+        Parser.productNameFilter((Map<String, Object>) Parser.fromJson());
+
 
     }
 }

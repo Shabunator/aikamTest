@@ -5,6 +5,7 @@ import Entities.Buyers;
 import Entities.Products;
 import Entities.Purchases;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.Reader;
 import java.nio.file.Files;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Parser {
+
+
 
     public static Map<?, ?> fromJson() {
         try {
@@ -108,6 +111,79 @@ public class Parser {
             }
 
             System.out.println(productIds);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void lastNameFilter(Map <String, Object> map) {
+
+        Connection dbConnection = BDConnection.getDBConnection();
+        try {
+            Statement statement = dbConnection.createStatement();
+
+            String lastNameQuery = "SELECT * FROM Buyers WHERE lastName = '";
+
+            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
+
+            for (Map<String, Object> elements : criterias) {
+                for (Map.Entry<String, Object> entry : elements.entrySet()) {
+                    //System.out.println(entry.getKey() + " = " + entry.getValue());
+                    if (entry.getKey().equals("lastName") || entry.getKey().equals("firstName")) {
+                        lastNameQuery += entry.getValue() + "';";
+                    }
+                }
+            }
+
+            ResultSet resultLastName = statement.executeQuery(lastNameQuery);
+            while (resultLastName.next()) {
+                String buyerFirstName = resultLastName.getString("firstName");
+                String buyerLastName = resultLastName.getString("lastName");
+                System.out.printf("%s %s", buyerFirstName, buyerLastName);
+            }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    }
+
+    public static void productNameFilter(Map <String, Object> map) {
+        Connection dbConnection = BDConnection.getDBConnection();
+        try {
+            Statement statement = dbConnection.createStatement();
+
+            String productNameQuery = "SELECT COUNT(productid) AS counter, products.productname, buyers.firstname, buyers.lastname\n" +
+                    "FROM products\n" +
+                    "JOIN purchases ON products.id = purchases.productid\n" +
+                    "JOIN buyers ON buyers.id = purchases.buyerid\n" +
+                    "WHERE products.productname = '$productName' \n" +
+                    "GROUP BY products.productname, purchases.buyerid, buyers.firstname, buyers.lastname\n" +
+                    "HAVING COUNT(productid) = '$minTimes'";
+
+            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
+
+            for (Map<String, Object> elements : criterias) {
+                for (Map.Entry<String, Object> entry : elements.entrySet()) {
+                    //System.out.println(entry.getKey() + " = " + entry.getValue());
+                    if (entry.getKey().equals("productName")) {
+                        productNameQuery = productNameQuery.replace("$productName", entry.getValue().toString());
+                    }
+                    if (entry.getKey().equals("minTimes")) {
+                        productNameQuery = productNameQuery.replace("$minTimes", entry.getValue().toString().replace(".0", ""));
+                    }
+                }
+            }
+
+            ResultSet resultProductMinTimes = statement.executeQuery(productNameQuery);
+            while (resultProductMinTimes.next()) {
+                Integer minTimes = resultProductMinTimes.getInt("counter");
+                String productName = resultProductMinTimes.getString("productName");
+                String buyerFirstName = resultProductMinTimes.getString("firstName");
+                String buyerLastName = resultProductMinTimes.getString("lastName");
+                System.out.printf("%d %s %s %s \n \n", minTimes, productName, buyerFirstName, buyerLastName);
+            }
+
+
 
         } catch (SQLException e) {
             e.printStackTrace();
