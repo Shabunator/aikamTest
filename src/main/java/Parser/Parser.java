@@ -7,6 +7,7 @@ import Entities.Purchases;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -182,6 +183,19 @@ public class Parser {
                 String buyerLastName = resultProductMinTimes.getString("lastName");
                 System.out.printf("%d %s %s %s \n \n", minTimes, productName, buyerFirstName, buyerLastName);
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void minMAxFilter(Map <String, Object> map) {
+        Connection dbconnection = BDConnection.getDBConnection();
+        try {
+            Statement statement = dbconnection.createStatement();
+
+
+
 
 
 
