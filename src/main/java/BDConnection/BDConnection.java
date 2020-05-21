@@ -51,7 +51,6 @@ public class BDConnection {
                     "    firstName VARCHAR(100),\n" +
                     "    lastName VARCHAR(100)\n" +
                     ");\n" +
-                    "\n" +
                     "DROP TABLE IF EXISTS Products CASCADE;\n" +
                     "CREATE TABLE Products\n" +
                     "(\t\n" +

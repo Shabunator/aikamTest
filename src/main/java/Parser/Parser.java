@@ -175,6 +175,7 @@ public class Parser {
                 }
             }
 
+
             ResultSet resultProductMinTimes = statement.executeQuery(productNameQuery);
             while (resultProductMinTimes.next()) {
                 Integer minTimes = resultProductMinTimes.getInt("counter");
@@ -189,16 +190,79 @@ public class Parser {
         }
     }
 
-    public static void minMAxFilter(Map <String, Object> map) {
+    public static void minMaxFilter(Map <String, Object> map) {
         Connection dbconnection = BDConnection.getDBConnection();
         try {
             Statement statement = dbconnection.createStatement();
 
+            String minMaxQuery = "SELECT SUM(price) AS amount, buyers.firstname, buyers.lastname\n" +
+                    "FROM products\n" +
+                    "JOIN purchases ON products.id = purchases.productid\n" +
+                    "JOIN buyers ON buyers.id = purchases.buyerid\n" +
+                    "GROUP BY buyers.firstname, buyers.lastname\n" +
+                    "HAVING SUM(price) BETWEEN $minimum AND $maximum";
 
+            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
 
+            for (Map<String, Object> elements : criterias) {
+                for (Map.Entry<String, Object> entry : elements.entrySet()) {
+                    if (entry.getKey().equals("minExpenses")) {
+                        minMaxQuery = minMaxQuery.replace("$minimum", entry.getValue().toString());
+                    }
+                    if (entry.getKey().equals("maxExpenses")) {
+                        minMaxQuery = minMaxQuery.replace("$maximum", entry.getValue().toString().replace(".0", ""));
+                    }
+                }
+            }
 
+            ResultSet resultMinMax = statement.executeQuery(minMaxQuery);
+            while (resultMinMax.next()) {
+                Integer amount = resultMinMax.getInt("amount");
+                String firstname = resultMinMax.getString("firstname");
+                String lastname = resultMinMax.getString("lastname");
+                System.out.printf("%d %s %s \n \n", amount, firstname, lastname);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static void badCustomersFilter(Map <String, Object> map) {
+        Connection dbconnection = BDConnection.getDBConnection();
+        try {
+            Statement statement = dbconnection.createStatement();
 
+            String badCustumersQuery = "SELECT COUNT(buyerid), buyers.firstname, buyers.lastname\n" +
+                    "\n" +
+                    "FROM purchases\n" +
+                    "JOIN buyers ON purchases.buyerid = buyers.id\n" +
+                    "GROUP BY buyerid, buyers.firstname, buyers.lastname\n" +
+                    "\n" +
+                    "HAVING COUNT (buyerid) = (SELECT COUNT(buyerid)\n" +
+                    "FROM purchases\n" +
+                    "GROUP BY buyerid\n" +
+                    "ORDER BY COUNT(buyerid)\n" +
+                    "LIMIT 1\n" +
+                    ")\n" +
+                    "\n" +
+                    "LIMIT $amount";
+
+            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
+
+            for (Map<String, Object> elements : criterias) {
+                for (Map.Entry<String, Object> entry : elements.entrySet()) {
+                    if (entry.getKey().equals("badCustomers")) {
+                        badCustumersQuery = badCustumersQuery.replace("$amount", entry.getValue().toString());
+                    }
+                }
+            }
+
+            ResultSet resultBadCustomers = statement.executeQuery(badCustumersQuery);
+            while (resultBadCustomers.next()) {
+                String firstname = resultBadCustomers.getString("firstname");
+                String lastname = resultBadCustomers.getString("lastname");
+                System.out.printf("%s %s \n", firstname, lastname);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
