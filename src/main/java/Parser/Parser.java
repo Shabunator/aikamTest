@@ -2,12 +2,12 @@ package Parser;
 
 import BDConnection.BDConnection;
 import Entities.Buyers;
-import Entities.Products;
-import Entities.Purchases;
+import Entities.Result;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import javax.swing.plaf.nimbus.State;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,13 +15,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Parser {
-
-
 
     public static Map<?, ?> fromJson() {
         try {
@@ -46,80 +43,95 @@ public class Parser {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
         return null;
     }
 
-    public static void execute(Map <String, Object> map) {
-        Connection dbConnection = BDConnection.getDBConnection();
-        try {
-            Statement statement = dbConnection.createStatement();
-            String query = "SELECT * FROM Buyers WHERE ";
-            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
+    public static void toJson(Result result) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(result);
 
-            for (Map<String, Object> elements : criterias) {
-                for (Map.Entry<String, Object> entry : elements.entrySet() ) {
-                    //System.out.println(entry.getKey() + " = " + entry.getValue());
-                    if (entry.getKey().equals("lastName") || entry.getKey().equals("firstName")) {
-                        query += entry.getKey() + " = '" + entry.getValue() + "' AND ";
-                    }
-                }
-            }
-
-            query = query.substring(0, query.length()-4) + ";";
-            ResultSet resultSet = statement.executeQuery(query);
-            System.out.println(query);
-
-            ArrayList<Buyers> arrayList = new ArrayList<>();
-
-            while (resultSet.next()) {
-                String lastName = resultSet.getString("firstName");
-                String firstName = resultSet.getString("firstName");
-                Integer id = resultSet.getInt("id");
-
-                arrayList.add(new Buyers(id, lastName, firstName));
-
-            }
-
-            ArrayList<Integer> productIds = new ArrayList<>();
-
-            for (Buyers buyers:
-                 arrayList) {
-
-                String pushProducts = "SELECT * FROM Purchases WHERE buyerId = " + buyers.getId();
-
-                ResultSet resultProducts = statement.executeQuery(pushProducts);
-                while (resultProducts.next()) {
-                    Integer productId = resultProducts.getInt("productId");
-                    System.out.println(productId);
-
-                    productIds.add(productId);
-                }
-            }
-
-            ArrayList<Products> purchasesList = new ArrayList<>();
-
-            for (Integer id:
-                 productIds) {
-
-                String pushPurchaes = "SELECT * FROM Products WHERE Id = " + id;
-
-                ResultSet resultPurchases = statement.executeQuery(pushPurchaes);
-                while (resultPurchases.next()) {
-                    String productName = resultPurchases.getString("productName");
-                    Double price = resultPurchases.getDouble("price");
-                    purchasesList.add(new Products(productName, price));
-                }
-            }
-
-            System.out.println(productIds);
-
-        } catch (SQLException e) {
+        // Java objects to File
+        try (FileWriter writer = new FileWriter("src\\main\\resources\\Output.json")) {
+            gson.toJson(result, writer);
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(json);
     }
 
-    public static void lastNameFilter(Map <String, Object> map) {
+//    public static void execute(Map <String, Object> map) {
+//        Connection dbConnection = BDConnection.getDBConnection();
+//        try {
+//            Statement statement = dbConnection.createStatement();
+//            String query = "SELECT * FROM Buyers WHERE ";
+//            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
+//
+//            for (Map<String, Object> elements : criterias) {
+//                for (Map.Entry<String, Object> entry : elements.entrySet() ) {
+//                    //System.out.println(entry.getKey() + " = " + entry.getValue());
+//                    if (entry.getKey().equals("lastName") || entry.getKey().equals("firstName")) {
+//                        query += entry.getKey() + " = '" + entry.getValue() + "' AND ";
+//                    }
+//                }
+//            }
+//
+//            query = query.substring(0, query.length()-4) + ";";
+//            ResultSet resultSet = statement.executeQuery(query);
+//            System.out.println(query);
+//
+//            ArrayList<Buyers> arrayList = new ArrayList<>();
+//
+//            while (resultSet.next()) {
+//                String lastName = resultSet.getString("firstName");
+//                String firstName = resultSet.getString("firstName");
+//                Integer id = resultSet.getInt("id");
+//
+//                arrayList.add(new Buyers(id, lastName, firstName));
+//
+//            }
+//
+//            ArrayList<Integer> productIds = new ArrayList<>();
+//
+//            for (Buyers buyers:
+//                 arrayList) {
+//
+//                String pushProducts = "SELECT * FROM Purchases WHERE buyerId = " + buyers.getId();
+//
+//                ResultSet resultProducts = statement.executeQuery(pushProducts);
+//                while (resultProducts.next()) {
+//                    Integer productId = resultProducts.getInt("productId");
+//                    System.out.println(productId);
+//
+//                    productIds.add(productId);
+//                }
+//            }
+//
+//            ArrayList<Products> purchasesList = new ArrayList<>();
+//
+//            for (Integer id:
+//                 productIds) {
+//
+//                String pushPurchaes = "SELECT * FROM Products WHERE Id = " + id;
+//
+//                ResultSet resultPurchases = statement.executeQuery(pushPurchaes);
+//                while (resultPurchases.next()) {
+//                    String productName = resultPurchases.getString("productName");
+//                    Double price = resultPurchases.getDouble("price");
+//                    purchasesList.add(new Products(productName, price));
+//                }
+//            }
+//
+//            System.out.println(productIds);
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
+    public static Result.InnerResult lastNameFilter(Map <String, Object> map) {
+        //создаём экземпляр класса Result.InnerResult
+        Result.InnerResult lastNameResult = new Result.InnerResult();
         Connection dbConnection = BDConnection.getDBConnection();
         try {
             Statement statement = dbConnection.createStatement();
@@ -130,9 +142,10 @@ public class Parser {
 
             for (Map<String, Object> elements : criterias) {
                 for (Map.Entry<String, Object> entry : elements.entrySet()) {
-                    //System.out.println(entry.getKey() + " = " + entry.getValue());
                     if (entry.getKey().equals("lastName") || entry.getKey().equals("firstName")) {
                         lastNameQuery += entry.getValue() + "';";
+                        // добавляем элементы в мапу
+                        lastNameResult.setCriteria((Map<String, Object>) elements);
                     }
                 }
             }
@@ -141,14 +154,23 @@ public class Parser {
             while (resultLastName.next()) {
                 String buyerFirstName = resultLastName.getString("firstName");
                 String buyerLastName = resultLastName.getString("lastName");
-                System.out.printf("%s %s", buyerFirstName, buyerLastName);
+//                System.out.printf("%s %s", buyerFirstName, buyerLastName);
+//                добавляем данные в сущность Buyers
+                lastNameResult.addResults(new Buyers(buyerFirstName, buyerLastName));
             }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
+//            System.out.println(lastNameResult);
+
+            return lastNameResult;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
-    public static void productNameFilter(Map <String, Object> map) {
+    public static Result.InnerResult productNameFilter(Map <String, Object> map) {
+        Result.InnerResult productNameResult = new Result.InnerResult();
         Connection dbConnection = BDConnection.getDBConnection();
         try {
             Statement statement = dbConnection.createStatement();
@@ -165,12 +187,13 @@ public class Parser {
 
             for (Map<String, Object> elements : criterias) {
                 for (Map.Entry<String, Object> entry : elements.entrySet()) {
-                    //System.out.println(entry.getKey() + " = " + entry.getValue());
                     if (entry.getKey().equals("productName")) {
                         productNameQuery = productNameQuery.replace("$productName", entry.getValue().toString());
+                        productNameResult.setCriteria((Map< String, Object >)elements);
                     }
                     if (entry.getKey().equals("minTimes")) {
                         productNameQuery = productNameQuery.replace("$minTimes", entry.getValue().toString().replace(".0", ""));
+                        productNameResult.setCriteria((Map< String, Object >)elements);
                     }
                 }
             }
@@ -183,14 +206,21 @@ public class Parser {
                 String buyerFirstName = resultProductMinTimes.getString("firstName");
                 String buyerLastName = resultProductMinTimes.getString("lastName");
                 System.out.printf("%d %s %s %s \n \n", minTimes, productName, buyerFirstName, buyerLastName);
+                productNameResult.addResults(new Buyers(buyerFirstName, buyerLastName));
             }
+
+            System.out.println(productNameResult);
+
+            return productNameResult;
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    public static void minMaxFilter(Map <String, Object> map) {
+    public static Result.InnerResult minMaxFilter(Map <String, Object> map) {
+        Result.InnerResult minMaxResult = new Result.InnerResult();
         Connection dbconnection = BDConnection.getDBConnection();
         try {
             Statement statement = dbconnection.createStatement();
@@ -208,9 +238,11 @@ public class Parser {
                 for (Map.Entry<String, Object> entry : elements.entrySet()) {
                     if (entry.getKey().equals("minExpenses")) {
                         minMaxQuery = minMaxQuery.replace("$minimum", entry.getValue().toString());
+                        minMaxResult.setCriteria((Map<String, Object>) elements);
                     }
                     if (entry.getKey().equals("maxExpenses")) {
                         minMaxQuery = minMaxQuery.replace("$maximum", entry.getValue().toString().replace(".0", ""));
+                        minMaxResult.setCriteria((Map<String, Object>) elements);
                     }
                 }
             }
@@ -221,18 +253,26 @@ public class Parser {
                 String firstname = resultMinMax.getString("firstname");
                 String lastname = resultMinMax.getString("lastname");
                 System.out.printf("%d %s %s \n \n", amount, firstname, lastname);
+                minMaxResult.addResults(new Buyers(firstname, lastname));
             }
+
+            System.out.println(minMaxResult);
+
+            return minMaxResult;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    public static void badCustomersFilter(Map <String, Object> map) {
+    public static Result.InnerResult badCustomersFilter(Map <String, Object> map) {
+        Result.InnerResult badCustomerResult = new Result.InnerResult();
         Connection dbconnection = BDConnection.getDBConnection();
         try {
             Statement statement = dbconnection.createStatement();
 
-            String badCustumersQuery = "SELECT COUNT(buyerid), buyers.firstname, buyers.lastname\n" +
+            String badCustomersQuery = "SELECT COUNT(buyerid), buyers.firstname, buyers.lastname\n" +
                     "\n" +
                     "FROM purchases\n" +
                     "JOIN buyers ON purchases.buyerid = buyers.id\n" +
@@ -252,19 +292,25 @@ public class Parser {
             for (Map<String, Object> elements : criterias) {
                 for (Map.Entry<String, Object> entry : elements.entrySet()) {
                     if (entry.getKey().equals("badCustomers")) {
-                        badCustumersQuery = badCustumersQuery.replace("$amount", entry.getValue().toString());
+                        badCustomersQuery = badCustomersQuery.replace("$amount", entry.getValue().toString());
+                        badCustomerResult.setCriteria((Map<String, Object>)elements);
                     }
                 }
             }
 
-            ResultSet resultBadCustomers = statement.executeQuery(badCustumersQuery);
+            ResultSet resultBadCustomers = statement.executeQuery(badCustomersQuery);
             while (resultBadCustomers.next()) {
                 String firstname = resultBadCustomers.getString("firstname");
                 String lastname = resultBadCustomers.getString("lastname");
                 System.out.printf("%s %s \n", firstname, lastname);
+                badCustomerResult.addResults(new Buyers(firstname, lastname));
             }
+            System.out.println(badCustomerResult);
+
+            return badCustomerResult;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

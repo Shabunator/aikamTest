@@ -1,13 +1,8 @@
 import BDConnection.BDConnection;
+import Entities.Result;
 import Parser.Parser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
-
-import java.awt.image.ImageProducer;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -17,8 +12,18 @@ public class App {
 
     public static void main(String[] args) throws SQLException {
         BDConnection.createDbUserTable();
-        Parser.badCustomersFilter((Map<String, Object>) Parser.fromJson());
+        Result.InnerResult result1 = Parser.lastNameFilter((Map<String, Object>) Parser.fromJson());
+        Result.InnerResult result2 = Parser.productNameFilter((Map<String, Object>) Parser.fromJson());
+        Result.InnerResult result3 = Parser.minMaxFilter((Map<String, Object>) Parser.fromJson());
+        Result.InnerResult result4 = Parser.badCustomersFilter((Map<String, Object>) Parser.fromJson());
 
+        List<Result.InnerResult> resultList = new ArrayList<>();
+        resultList.add(result1);
+        resultList.add(result2);
+        resultList.add(result3);
+        resultList.add(result4);
 
+        Result resultSet = new Result(resultList);
+        Parser.toJson(resultSet);
     }
 }

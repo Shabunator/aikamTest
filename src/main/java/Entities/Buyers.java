@@ -14,6 +14,11 @@ public class Buyers {
                 '}';
     }
 
+    public Buyers(String lastName, String firstName) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+    }
+
     public Buyers(Integer id, String lastName, String firstName) {
         this.id = id;
         this.lastName = lastName;
@@ -27,7 +32,6 @@ public class Buyers {
     public String getLastName() {
         return lastName;
     }
-
     public String getFirstName() {
         return firstName;
     }

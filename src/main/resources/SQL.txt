@@ -1,23 +1,27 @@
+DROP TABLE IF EXISTS Buyers CASCADE;
 CREATE TABLE Buyers
 (
     Id SERIAL PRIMARY KEY,
-    FirstName VARCHAR(100),
-    LastName VARCHAR(100)
+    firstName VARCHAR(100),
+    lastName VARCHAR(100)
 );
+DROP TABLE IF EXISTS Products CASCADE;
 
 CREATE TABLE Products
-(
+(	
 	Id SERIAL PRIMARY KEY,
-    ProductName VARCHAR(100),
-    Price DECIMAL
+    productName VARCHAR(100),
+    price DECIMAL
 );
+
+DROP TABLE IF EXISTS Purchases CASCADE;
 
 CREATE TABLE Purchases
 (
     Id SERIAL PRIMARY KEY,
-    BuyerId INTEGER,
-    ProductId INTEGER,
-    Date timestamp,
+    buyerId INTEGER,
+    productId INTEGER,
+    "date" timestamp,
     FOREIGN KEY (BuyerId) REFERENCES Buyers (Id),
     FOREIGN KEY (ProductId) REFERENCES Products (Id)
 );
@@ -26,6 +30,7 @@ INSERT INTO Buyers(
 	"firstname", "lastname")
 	VALUES ('Иван', 'Иванов'),
 	 ('Дмитрий', 'Сидоров'),
+	 ('Дмитрий', 'Иванов'),
 	 ('Генадий', 'Зайцев'),
 	 ('Олег', 'Сизов'),
 	 ('Андрей', 'Семёнов'),
@@ -76,8 +81,9 @@ INSERT INTO "products"(
 	('Фасоль', 56),
 	('Сахар', 74),
 	('Соль', 49),
-	('Гречка', 206);
+	('Гречка', 206),
+	('Минеральная вода', 75);
 
 INSERT INTO purchases(buyerid, productid, date) VALUES (4, 10, localtimestamp);
+INSERT INTO purchases(buyerid, productid, date) VALUES (1, 31, localtimestamp);
 
-SELECT * FROM buyers where
