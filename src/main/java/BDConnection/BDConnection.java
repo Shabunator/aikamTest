@@ -56,9 +56,6 @@ public class BDConnection {
             // выполнить SQL запрос
             statement.execute(String.valueOf(SQL));
 
-            System.out.println("Table \"Buyers\" is created!\n" +
-                    "Table \"Products\" is created!\n" +
-                    "Table \"Purchases\" is created!\n");
             log.info("Tables are created");
 
         } catch (SQLException | FileNotFoundException e) {

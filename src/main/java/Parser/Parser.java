@@ -22,22 +22,12 @@ public class Parser {
 
     public static Map<?, ?> fromJson() {
         try {
-            // create Gson instance
             Gson gson = new Gson();
-
-            // create a reader
             Reader reader = Files.newBufferedReader(Paths.get("C:\\Users\\home\\Desktop\\JavaProjects\\aikamTest\\src\\main\\resources\\Input.json"));
-
-            // convert JSON file to map
             Map<?, ?> map = gson.fromJson(reader, Map.class);
-
-            // print map entries
             for (Map.Entry<?, ?> entry : map.entrySet()) {
-                //System.out.println(entry.getKey() + "=" + entry.getValue());
             }
-            // close reader
             reader.close();
-
             return map;
 
         } catch (Exception ex) {
