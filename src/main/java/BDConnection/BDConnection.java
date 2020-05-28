@@ -46,7 +46,7 @@ public class BDConnection {
             dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
 
-            FileReader reader = new FileReader("src/main/resources/SQL.txt");
+            FileReader reader = new FileReader("src/main/resources/SQL1.txt");
             Scanner scanner = new Scanner(reader);
             StringBuilder SQL = new StringBuilder();
             while (scanner.hasNext()) {

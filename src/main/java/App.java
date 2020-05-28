@@ -14,7 +14,8 @@ public class App {
 
     public static void main(String[] args) throws SQLException, ParseException {
         BDConnection.createDbUserTable();
-        DateFilter.execute();
+        DateFilter.dateResult(DateFilter.fromJson());
+//        DateFilter.execute();
 //        Map<String, Object> result = (Map<String, Object>) Parser.fromJson();
 //        Result.InnerResult resultLastNameFilter = Parser.lastNameFilter(result);
 //        Result.InnerResult resultProductNameFilter = Parser.productNameFilter(result);

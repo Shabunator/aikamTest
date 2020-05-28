@@ -21,7 +21,7 @@ CREATE TABLE Purchases
     Id SERIAL PRIMARY KEY,
     buyerId INTEGER,
     productId INTEGER,
-    "date" timestamp,
+    "date" date,
     FOREIGN KEY (BuyerId) REFERENCES Buyers (Id),
     FOREIGN KEY (ProductId) REFERENCES Products (Id)
 );

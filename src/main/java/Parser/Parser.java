@@ -23,10 +23,9 @@ public class Parser {
     public static Map<?, ?> fromJson() {
         try {
             Gson gson = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("C:\\Users\\home\\Desktop\\JavaProjects\\aikamTest\\src\\main\\resources\\Input.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("src\\main\\resources\\Input1.json"));
             Map<?, ?> map = gson.fromJson(reader, Map.class);
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-            }
+
             reader.close();
             return map;
 
@@ -42,82 +41,13 @@ public class Parser {
         String json = gson.toJson(result);
 
         // Java objects to File
-        try (FileWriter writer = new FileWriter("src\\main\\resources\\Output.json")) {
+        try (FileWriter writer = new FileWriter("src\\main\\resources\\Output1.json")) {
             gson.toJson(result, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println(json);
     }
-
-//    public static void execute(Map <String, Object> map) {
-//        Connection dbConnection = BDConnection.getDBConnection();
-//        try {
-//            Statement statement = dbConnection.createStatement();
-//            String query = "SELECT * FROM Buyers WHERE ";
-//            List<Map<String, Object>> criterias = (List<Map<String, Object>>) map.get("criterias");
-//
-//            for (Map<String, Object> elements : criterias) {
-//                for (Map.Entry<String, Object> entry : elements.entrySet() ) {
-//                    //System.out.println(entry.getKey() + " = " + entry.getValue());
-//                    if (entry.getKey().equals("lastName") || entry.getKey().equals("firstName")) {
-//                        query += entry.getKey() + " = '" + entry.getValue() + "' AND ";
-//                    }
-//                }
-//            }
-//
-//            query = query.substring(0, query.length()-4) + ";";
-//            ResultSet resultSet = statement.executeQuery(query);
-//            System.out.println(query);
-//
-//            ArrayList<Buyers> arrayList = new ArrayList<>();
-//
-//            while (resultSet.next()) {
-//                String lastName = resultSet.getString("firstName");
-//                String firstName = resultSet.getString("firstName");
-//                Integer id = resultSet.getInt("id");
-//
-//                arrayList.add(new Buyers(id, lastName, firstName));
-//
-//            }
-//
-//            ArrayList<Integer> productIds = new ArrayList<>();
-//
-//            for (Buyers buyers:
-//                 arrayList) {
-//
-//                String pushProducts = "SELECT * FROM Purchases WHERE buyerId = " + buyers.getId();
-//
-//                ResultSet resultProducts = statement.executeQuery(pushProducts);
-//                while (resultProducts.next()) {
-//                    Integer productId = resultProducts.getInt("productId");
-//                    System.out.println(productId);
-//
-//                    productIds.add(productId);
-//                }
-//            }
-//
-//            ArrayList<Products> purchasesList = new ArrayList<>();
-//
-//            for (Integer id:
-//                 productIds) {
-//
-//                String pushPurchaes = "SELECT * FROM Products WHERE Id = " + id;
-//
-//                ResultSet resultPurchases = statement.executeQuery(pushPurchaes);
-//                while (resultPurchases.next()) {
-//                    String productName = resultPurchases.getString("productName");
-//                    Double price = resultPurchases.getDouble("price");
-//                    purchasesList.add(new Products(productName, price));
-//                }
-//            }
-//
-//            System.out.println(productIds);
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public static Result.InnerResult lastNameFilter(Map <String, Object> map) {
         //создаём экземпляр класса Result.InnerResult
@@ -187,7 +117,6 @@ public class Parser {
                     }
                 }
             }
-
 
             ResultSet resultProductMinTimes = statement.executeQuery(productNameQuery);
             while (resultProductMinTimes.next()) {
