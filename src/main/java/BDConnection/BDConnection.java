@@ -32,7 +32,7 @@ public class BDConnection {
             dbConnection = DriverManager.getConnection(DB_URL,USER,PASS);
             return dbConnection;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
             log.info(e.getMessage());
         }
         return dbConnection;

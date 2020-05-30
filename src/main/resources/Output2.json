@@ -1,0 +1,36 @@
+{
+  "type": "stat",
+  "customers": [
+    {
+      "name": "Дмитрий Сидоров",
+      "purchases": [
+        {
+          "name": "Имбирь",
+          "expenses": 2790
+        }
+      ]
+    },
+    {
+      "name": "Дмитрий Иванов",
+      "purchases": [
+        {
+          "name": "Лимон",
+          "expenses": 460
+        },
+        {
+          "name": "Мороженное пломбир",
+          "expenses": 70
+        }
+      ]
+    },
+    {
+      "name": "Иван Иванов",
+      "purchases": [
+        {
+          "name": "Сгущёнка",
+          "expenses": 80
+        }
+      ]
+    }
+  ]
+}

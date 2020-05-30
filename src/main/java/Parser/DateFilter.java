@@ -1,10 +1,13 @@
 package Parser;
 
 import BDConnection.BDConnection;
-import Entities.Result;
+import Entities.DateResult;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,13 +20,12 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 
 public class DateFilter {
 
-    public static final Logger log = Logger.getLogger(BDConnection.class);
+    public static final Logger log = Logger.getLogger(DateFilter.class);
 
     public static Map<String, String> fromJson() {
         try {
@@ -39,6 +41,19 @@ public class DateFilter {
         }
 
         return null;
+    }
+
+    public static void toJson(DateResult dateResult) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(dateResult);
+
+        // Java objects to File
+        try (FileWriter writer = new FileWriter("src\\main\\resources\\Output2.json")) {
+            gson.toJson(dateResult, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(json);
     }
 
     public static void execute(Map<String, String> map) throws ParseException {
@@ -85,28 +100,34 @@ public class DateFilter {
         try {
             Statement statement = dbConnection.createStatement();
 
-            String dateQuery = "SELECT distinct buyers.firstname, buyers.lastname, products.productname, sum(products.price) as price, products.id \n" +
-                    "FROM purchases \n" +
-                    "inner JOIN products ON purchases.productid = products.id\n" +
-                    "inner JOIN buyers ON purchases.buyerid = buyers.id \n" +
-                    "WHERE purchases.date BETWEEN '$startDate' AND '$endDate' and extract('ISODOW' from date) < 6\n" +
-                    "group by buyers.firstname, buyers.lastname, products.productname,products.id\n" +
-                    "order by sum(products.price) DESC;";
+            String dateQuery =
+                    "SELECT distinct buyers.firstname, buyers.lastname, products.productname, sum(products.price) as price\n" +
+                            "FROM purchases \n" +
+                            "inner JOIN products ON purchases.productid = products.id\n" +
+                            "inner JOIN buyers ON purchases.buyerid = buyers.id \n" +
+                            "WHERE purchases.date BETWEEN '$startDate' AND '$endDate' and extract('ISODOW' from date) < 6\n" +
+                            "group by buyers.firstname, buyers.lastname, products.productname\n" +
+                            "order by sum(products.price) DESC;";
 
             dateQuery = dateQuery.replace("$startDate", map.get("startDate"));
             dateQuery = dateQuery.replace("$endDate", map.get("endDate"));
 
             ResultSet resultSet = statement.executeQuery(dateQuery);
 
+            //слздание экземпляра класса Date резалт
+            DateResult dateResult = new DateResult();
+
             while (resultSet.next()) {
                 String buyerFirstName = resultSet.getString("firstName");
                 String buyerLastName = resultSet.getString("lastName");
                 String productName = resultSet.getString("productName");
                 Integer price = resultSet.getInt("price");
-
+                //наполнение сущности DateResult
+                dateResult.fillObject(buyerFirstName + " " + buyerLastName, productName, price);
 //                System.out.printf("%s %s %s %d \n \n", buyerFirstName, buyerLastName, productName, price);
             }
-
+//            System.out.println(dateResult.toString());
+            toJson(dateResult);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

@@ -2,6 +2,7 @@ package Parser;
 
 import BDConnection.BDConnection;
 import Entities.Buyers;
+import Entities.DateResult;
 import Entities.Result;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
