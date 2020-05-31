@@ -1,5 +1,6 @@
 {
   "type": "stat",
+  "totalDays": 45,
   "customers": [
     {
       "name": "Дмитрий Сидоров",
@@ -24,13 +25,28 @@
       ]
     },
     {
+      "name": "Генадий Зайцев",
+      "purchases": [
+        {
+          "name": "Яблоки",
+          "expenses": 230
+        }
+      ]
+    },
+    {
       "name": "Иван Иванов",
       "purchases": [
         {
           "name": "Сгущёнка",
           "expenses": 80
+        },
+        {
+          "name": "Минеральная вода",
+          "expenses": 75
         }
       ]
     }
-  ]
+  ],
+  "totalExpenses": 3705,
+  "avgExpenses": 617.5
 }

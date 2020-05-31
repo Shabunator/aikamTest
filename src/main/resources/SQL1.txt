@@ -84,8 +84,8 @@ INSERT INTO "products"(
 	('Гречка', 206),
 	('Минеральная вода', 75);
 
-INSERT INTO purchases(buyerid, productid, date) VALUES (4, 10, localtimestamp);
-INSERT INTO purchases(buyerid, productid, date) VALUES (1, 31, localtimestamp);
+INSERT INTO purchases(buyerid, productid, date) VALUES (4, 10, '2020-05-14');
+INSERT INTO purchases(buyerid, productid, date) VALUES (1, 31, '2020-05-15');
 INSERT INTO purchases(buyerid, productid, date) VALUES (1, 12, '2020-05-19');
 INSERT INTO purchases(buyerid, productid, date) VALUES (2, 13, '2020-05-19');
 INSERT INTO purchases(buyerid, productid, date) VALUES (3, 14, '2020-05-19');

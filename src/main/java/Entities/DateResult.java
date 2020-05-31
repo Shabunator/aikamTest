@@ -1,30 +1,31 @@
 package Entities;
 
+import Parser.DateFilter;
+import org.apache.log4j.Logger;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DateResult {
+public class DateResult extends DateFilter {
 
     final String type = "stat";
     Integer totalDays;
+
+    {
+        try {
+            totalDays = execute(fromJson());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     List<InnerResult> customers = new ArrayList<>();
 
-    public Integer getTotalDays() {
-        return totalDays;
-    }
+    public DateResult() {
 
-    public void setTotalDays(Integer totalDays) {
-        this.totalDays = totalDays;
-    }
-
-    public List<InnerResult> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<InnerResult> customers) {
-        this.customers = customers;
     }
 
     public static class InnerResult {
@@ -40,37 +41,13 @@ public class DateResult {
         String name;
         List<Map<String, Object>> purchases;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public List<Map<String, Object>> getPurchases() {
-            return purchases;
-        }
-
-        public void setPurchases(List<Map<String, Object>> purchases) {
-            this.purchases = purchases;
-        }
     }
 
-    public void addResults(InnerResult results) {
-        this.customers.add(results);
-    }
-
-    @Override
-    public String toString() {
-        return "DateResult{" +
-                "type='" + type + '\'' +
-                ", totalDays=" + totalDays +
-                ", customers=" + customers +
-                '}';
-    }
+    Integer totalExpenses = totalExpensesResult(fromJson());
+    Double avgExpenses = avgExpensesResult(fromJson());
 
     public void fillObject (String name, String productName, Integer productExpence){
+
         boolean contain = false;
         for (InnerResult customer:
              customers) {
@@ -93,7 +70,6 @@ public class DateResult {
             customers.add(customer);
         }
     };
-
 }
 
 

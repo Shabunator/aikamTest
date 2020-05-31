@@ -51,12 +51,12 @@ public class DateFilter {
         try (FileWriter writer = new FileWriter("src\\main\\resources\\Output2.json")) {
             gson.toJson(dateResult, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
         }
         System.out.println(json);
     }
 
-    public static void execute(Map<String, String> map) throws ParseException {
+    public static Integer execute(Map<String, String> map) throws ParseException {
         /**
          * 0 - воскр
          * 1 - понедельник
@@ -79,7 +79,7 @@ public class DateFilter {
 
         int workdays = 0;
         if (startDate.isEqual(endDate)) {
-            return;
+
         }
 
         while (startDate.isBefore(endDate) || startDate.equals(endDate)) {
@@ -92,6 +92,8 @@ public class DateFilter {
             }
             startDate = startDate.plusDays(1);
         }
+//        System.out.println(workdays);
+        return workdays;
     }
 
     public static void dateResult(Map<String, String> map) {
@@ -114,7 +116,7 @@ public class DateFilter {
 
             ResultSet resultSet = statement.executeQuery(dateQuery);
 
-            //слздание экземпляра класса Date резалт
+            //слздание экземпляра класса DateResult
             DateResult dateResult = new DateResult();
 
             while (resultSet.next()) {
@@ -124,12 +126,68 @@ public class DateFilter {
                 Integer price = resultSet.getInt("price");
                 //наполнение сущности DateResult
                 dateResult.fillObject(buyerFirstName + " " + buyerLastName, productName, price);
-//                System.out.printf("%s %s %s %d \n \n", buyerFirstName, buyerLastName, productName, price);
             }
-//            System.out.println(dateResult.toString());
+
             toJson(dateResult);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.info(e.getMessage());
         }
+    }
+
+    public static Integer totalExpensesResult(Map<String, String> map) {
+        Connection dbConneection = BDConnection.getDBConnection();
+        Integer total = 0;
+        try {
+            Statement statement = dbConneection.createStatement();
+
+            String totalExpenses = "select sum(products.price) as price\n" +
+                "from purchases \n" +
+                "inner join products on purchases.productid = products.id  \n" +
+                "inner join buyers on purchases.buyerid = buyers.id \n" +
+                "where purchases.\"date\" BETWEEN '$startDate' AND '$endDate' and extract('ISODOW' from date) < 6";
+
+            totalExpenses = totalExpenses.replace("$startDate", map.get("startDate"));
+            totalExpenses = totalExpenses.replace("$endDate", map.get("endDate"));
+
+            ResultSet resultTotalExpenses = statement.executeQuery(totalExpenses);
+
+
+            while(resultTotalExpenses.next()){
+                Integer productTotalExpenses = resultTotalExpenses.getInt("price");
+                total = productTotalExpenses;
+            }
+
+        } catch (SQLException e) {
+            log.info(e.getMessage());
+        }
+        return total;
+    }
+
+    public static Double avgExpensesResult(Map<String, String> map) {
+        Connection dbConnection = BDConnection.getDBConnection();
+        Double avg = 0.0;
+        try {
+            Statement statement = dbConnection.createStatement();
+
+        String avgExpenses = "select avg(price)\n" +
+                "from purchases \n" +
+                "inner join products on purchases.productid = products.id  \n" +
+                "inner join buyers on purchases.buyerid = buyers.id \n" +
+                "where purchases.\"date\" BETWEEN '$startDate' AND '$endDate' and extract('ISODOW' from date) < 6\n";
+
+            avgExpenses = avgExpenses.replace("$startDate", map.get("startDate"));
+            avgExpenses = avgExpenses.replace("$endDate", map.get("endDate"));
+
+            ResultSet resultAvgExpenses = statement.executeQuery(avgExpenses);
+
+            while (resultAvgExpenses.next()) {
+                Double productAvgExpenses = resultAvgExpenses.getDouble("avg");
+                avg = productAvgExpenses;
+            }
+            System.out.println(avg);
+        } catch (SQLException e) {
+            log.info(e.getMessage());
+        }
+        return avg;
     }
 }

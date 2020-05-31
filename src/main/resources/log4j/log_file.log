@@ -140,3 +140,13 @@
 2020-05-30 13:16:30 INFO  BDConnection:59 - Tables are created
 2020-05-30 13:17:39 INFO  BDConnection:59 - Tables are created
 2020-05-30 13:24:41 INFO  BDConnection:59 - Tables are created
+2020-05-31 21:54:22 INFO  BDConnection:57 - Tables are created
+2020-05-31 22:25:03 INFO  BDConnection:57 - Tables are created
+2020-05-31 22:27:42 INFO  BDConnection:57 - Tables are created
+2020-05-31 22:29:16 INFO  BDConnection:57 - Tables are created
+2020-06-01 00:58:19 INFO  BDConnection:57 - Tables are created
+2020-06-01 01:24:45 INFO  DateFilter:158 - ResultSet not positioned properly, perhaps you need to call next.
+2020-06-01 01:26:51 INFO  DateFilter:160 - ResultSet not positioned properly, perhaps you need to call next.
+2020-06-01 01:27:01 INFO  DateFilter:160 - ResultSet not positioned properly, perhaps you need to call next.
+2020-06-01 02:03:56 INFO  DateFilter:162 - ResultSet not positioned properly, perhaps you need to call next.
+2020-06-01 02:04:28 INFO  DateFilter:162 - ResultSet not positioned properly, perhaps you need to call next.

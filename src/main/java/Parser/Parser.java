@@ -2,10 +2,10 @@ package Parser;
 
 import BDConnection.BDConnection;
 import Entities.Buyers;
-import Entities.DateResult;
 import Entities.Result;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.log4j.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Parser {
+    public static final Logger log = Logger.getLogger(Parser.class);
 
     public static Map<?, ?> fromJson() {
         try {
@@ -31,7 +32,7 @@ public class Parser {
             return map;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.info(ex.getMessage());
         }
 
         return null;
@@ -45,9 +46,9 @@ public class Parser {
         try (FileWriter writer = new FileWriter("src\\main\\resources\\Output1.json")) {
             gson.toJson(result, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
         }
-        System.out.println(json);
+//        System.out.println(json);
     }
 
     public static Result.InnerResult lastNameFilter(Map <String, Object> map) {
@@ -84,7 +85,7 @@ public class Parser {
             return lastNameResult;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
             return null;
         }
 
@@ -134,7 +135,7 @@ public class Parser {
             return productNameResult;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
             return null;
         }
     }
@@ -176,12 +177,10 @@ public class Parser {
                 minMaxResult.addResults(new Buyers(firstname, lastname));
             }
 
-            System.out.println(minMaxResult);
-
             return minMaxResult;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
             return null;
         }
     }
@@ -229,7 +228,7 @@ public class Parser {
 
             return badCustomerResult;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
             return null;
         }
     }

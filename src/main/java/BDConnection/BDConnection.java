@@ -32,7 +32,6 @@ public class BDConnection {
             dbConnection = DriverManager.getConnection(DB_URL,USER,PASS);
             return dbConnection;
         } catch (SQLException e) {
-//            System.out.println(e.getMessage());
             log.info(e.getMessage());
         }
         return dbConnection;
@@ -52,11 +51,8 @@ public class BDConnection {
             while (scanner.hasNext()) {
                 SQL.append(scanner.nextLine());
             }
-
             // выполнить SQL запрос
             statement.execute(String.valueOf(SQL));
-
-            log.info("Tables are created");
 
         } catch (SQLException | FileNotFoundException e) {
             System.out.println(e.getMessage());
