@@ -37,6 +37,18 @@
         {
           "lastName": "Генадий",
           "firstName": "Зайцев"
+        },
+        {
+          "lastName": "Дмитрий",
+          "firstName": "Иванов"
+        },
+        {
+          "lastName": "Дмитрий",
+          "firstName": "Сидоров"
+        },
+        {
+          "lastName": "Иван",
+          "firstName": "Иванов"
         }
       ]
     },
@@ -50,8 +62,8 @@
           "firstName": "Зайцев"
         },
         {
-          "lastName": "Иван",
-          "firstName": "Иванов"
+          "lastName": "Дмитрий",
+          "firstName": "Сидоров"
         }
       ]
     }
